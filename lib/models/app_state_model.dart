@@ -111,6 +111,24 @@ class AppStateModel extends Model {
     return sorted;
   }
 
+  // ---- 昵称及邮箱（多页面共用） ----
+  String _nickname = '';
+  String _email = '';
+  String get nickname => _nickname;
+  String get email => _email;
+
+  void updateUserInfo({String? nickname, String? email}) {
+    if (nickname != null) {
+      _nickname = nickname;
+      StorageService.saveNickname(nickname);
+    }
+    if (email != null) {
+      _email = email;
+      StorageService.saveEmail(email);
+    }
+    notifyListeners();
+  }
+
   // ---- 统计 ----
   int get totalTasks => _tasks.length;
   int get completedTasks => _tasks.where((t) => t.isCompleted).length;
@@ -127,16 +145,21 @@ class AppStateModel extends Model {
     }
     _themeMode = await StorageService.loadThemeMode() ?? ThemeMode.light;
     _fontScale = await StorageService.loadFontScale() ?? 1.0;
+    _nickname = await StorageService.loadNickname() ?? '';
+    _email = await StorageService.loadEmail() ?? '';
+    notifyListeners();
+
+
     notifyListeners();
   }
 
   void _addSampleTasks() {
     final now = DateTime.now();
     _tasks = [
-      Task(id: '1', title: '学习 Flutter', description: '完成基础组件练习', createdAt: now, dueDate: now.add(Duration(days: 2)), priority: 'high'),
-      Task(id: '2', title: '买日用品', description: '牙膏、洗发水', createdAt: now, dueDate: now.add(Duration(days: 1)), priority: 'medium'),
-      Task(id: '3', title: '阅读《百年孤独》', description: '至少读50页', createdAt: now, dueDate: now.add(Duration(days: 7)), priority: 'low'),
-      Task(id: '4', title: '锻炼身体', description: '跑步30分钟', createdAt: now, dueDate: now, priority: 'high'),
+      Task(id: '1', title: '学习 Flutter', description: '完成基础组件练习', createdAt: now.subtract(Duration(days: 2)), dueDate: now.add(Duration(days: 2)), priority: 'high'),
+      Task(id: '2', title: '买日用品', description: '牙膏、洗发水', createdAt: now.subtract(Duration(hours: 3)), dueDate: now.add(Duration(days: 1)), priority: 'medium'),
+      Task(id: '3', title: '阅读《百年孤独》', description: '至少读50页', createdAt: now.subtract(Duration(hours: 13)), dueDate: now.add(Duration(days: 7)), priority: 'low'),
+      Task(id: '4', title: '锻炼身体', description: '跑步30分钟', createdAt: now.subtract(Duration(hours: 2)), dueDate: now.add(Duration(days: 1)), priority: 'high'),
     ];
     _saveTasks();
   }
@@ -153,4 +176,5 @@ class AppStateModel extends Model {
   void _saveFontScalePreference() {
     StorageService.saveFontScale(_fontScale);
   }
+
 }

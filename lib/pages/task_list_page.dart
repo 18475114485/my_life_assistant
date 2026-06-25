@@ -114,6 +114,13 @@ class _TaskListPageState extends State<TaskListPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('任务列表'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.purple],
+            ),
+          ),
+        ),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
@@ -130,12 +137,20 @@ class _TaskListPageState extends State<TaskListPage> {
         builder: (context, child, model) {
           // 每次数据变化时更新显示列表
           List<Task> displayTasks = model.tasks;
+          // 搜索
           if (_searchKeyword.isNotEmpty) {
-            displayTasks = model.searchTasks(_searchKeyword);
+            displayTasks = displayTasks.where((task) =>
+                task.title.toLowerCase().contains(_searchKeyword.toLowerCase())
+            ).toList();
           }
+          // 筛选
           if (_filterCompleted != null) {
-            displayTasks = displayTasks.where((t) => t.isCompleted == _filterCompleted).toList();
+            displayTasks = displayTasks.where((task) =>
+            task.isCompleted == _filterCompleted
+            ).toList();
           }
+          // 排序
+          displayTasks = model.sortTasks(_sortBy);
           return Column(
             children: [
               // 搜索、筛选、排序工具栏
@@ -264,6 +279,7 @@ class _TaskListPageState extends State<TaskListPage> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        // 优先级（红色为高，橙色为中，灰色为低）
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -295,6 +311,28 @@ class _TaskListPageState extends State<TaskListPage> {
             ],
           );
         },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+            colors: [Colors.blue, Colors.purple],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(context, '首页', Icons.home, 0, HomePage()),
+              _navItem(context, '任务', Icons.list, 1, TaskListPage()),
+              _navItem(context, '个人', Icons.person, 2, ProfilePage()),
+              _navItem(context, '统计', Icons.bar_chart, 3, StatisticsPage()),
+            ],
+          ),
+        ),
       ),
     );
   }

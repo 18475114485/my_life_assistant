@@ -24,66 +24,94 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/images/logo.png'),
+    return ScopedModelDescendant<AppStateModel>(
+      builder: (context, child, model) {
+        return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
                 ),
-                SizedBox(height: 8),
-                Text('我的生活助理', style: TextStyle(color: Colors.white, fontSize: 20)),
-                Text('v1.0.0', style: TextStyle(color: Colors.white70, fontSize: 12)),
-              ],
-            ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage('https://q1.qlogo.cn/g?b=qq&nk=3031648024&s=100'),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      model.nickname.isNotEmpty ? model.nickname : '未设置昵称',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    Text(
+                      model.email.isNotEmpty ? model.email : '未设置邮箱',
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.home),
+                title: Text('首页'),
+                onTap: () => _navigateTo(context, HomePage()),
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text('任务列表'),
+                onTap: () => _navigateTo(context, TaskListPage()),
+              ),
+              ListTile(
+                leading: Icon(Icons.person),
+                title: Text('个人中心'),
+                onTap: () => _navigateTo(context, ProfilePage()),
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('设置'),
+                onTap: () => _navigateTo(context, SettingsPage()),
+              ),
+              Divider(),
+              ListTile(
+                leading: Icon(Icons.info),
+                title: Text('关于'),
+                onTap: () {
+                  Navigator.pop(scaffoldContext);
+                  showDialog(
+                    context: scaffoldContext,
+                    builder: (ctx) => AlertDialog(
+                      title: Text('关于「我的生活助理」'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('版本: 1.0.0'),
+                          SizedBox(height: 8),
+                          Text('这是一个个人向生活助理App。'),
+                          Text('- 个性化定制日常活动！'),
+                          Text('- 工作、学习、放松、玩乐！'),
+                          Text('- 随时安排新任务！'),
+                          SizedBox(height: 8),
+                          Text('来定制属于自己的每日任务吧。'),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Text('关闭'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('首页'),
-            onTap: () => _navigateTo(context, HomePage()),
-          ),
-          ListTile(
-            leading: Icon(Icons.list),
-            title: Text('任务列表'),
-            onTap: () => _navigateTo(context, TaskListPage()),
-          ),
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text('个人中心'),
-            onTap: () => _navigateTo(context, ProfilePage()),
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('设置'),
-            onTap: () => _navigateTo(context, SettingsPage()),
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.info),
-            title: Text('关于'),
-            onTap: () {
-              Navigator.pop(scaffoldContext);
-              showAboutDialog(
-                context: context,
-                applicationName: '我的生活助理',
-                applicationVersion: '1.0.0',
-                children: [
-                  Text('一个展示Flutter基础组件的完整示例。'),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

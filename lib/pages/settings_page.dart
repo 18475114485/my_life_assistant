@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
-import 'package:my_life_assistant/widgets/custom_drawer.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -14,23 +13,23 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = true;
 
   @override
-  void initState() {
-    super.initState();
-    // 加载保存的昵称（此处省略，可扩展）
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('设置'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.purple],
+            ),
+          ),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
-      drawer: CustomDrawer(scaffoldContext: context),
       body: ScopedModelDescendant<AppStateModel>(
         builder: (context, child, model) {
           return ListView(
@@ -61,19 +60,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
               ),
-              // 通知开关
-              ListTile(
-                leading: Icon(Icons.notifications),
-                title: Text('允许通知'),
-                trailing: Switch(
-                  value: _notificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _notificationsEnabled = value;
-                    });
-                  },
-                ),
-              ),
               // 昵称输入
               ListTile(
                 leading: Icon(Icons.person),
@@ -85,6 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     border: InputBorder.none,
                   ),
                   onSubmitted: (value) {
+                    model.updateUserInfo(nickname: value);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('昵称已更新: $value')),
                     );
@@ -95,16 +82,17 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 leading: Icon(Icons.email),
                 title: Text('邮箱'),
-                subtitle: TextFormField(
+                subtitle: TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     hintText: '输入邮箱',
                     border: InputBorder.none,
                   ),
-                  validator: (value) {
-                    if (value == null || !value.contains('@')) {
-                      return '请输入有效邮箱';
-                    }
-                    return null;
+                  onSubmitted: (value) {
+                    model.updateUserInfo(email: value);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('邮箱已更新: $value')),
+                    );
                   },
                 ),
               ),

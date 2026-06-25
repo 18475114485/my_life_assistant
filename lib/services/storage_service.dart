@@ -48,4 +48,28 @@ class StorageService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble(_fontScaleKey);
   }
+
+  // 保存昵称
+  static Future<void> saveNickname(String nickname) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('nickname', nickname);
+  }
+
+  // 读取昵称
+  static Future<String?> loadNickname() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('nickname');
+  }
+
+  // 保存邮箱
+  static Future<void> saveEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+  }
+
+  // 读取邮箱
+  static Future<String?> loadEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('email');
+  }
 }

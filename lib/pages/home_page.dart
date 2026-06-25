@@ -17,19 +17,60 @@ class HomePage extends StatelessWidget {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('首页'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.purple],
+            ),
+          ),
+        ),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         actions: [
-          IconButton(icon: Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => SettingsPage()),
+              );
+            },
+          ),
         ],
       ),
       drawer: CustomDrawer(scaffoldContext: context),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // 标题横幅
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(24),
+              margin: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    '我的生活助理',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    '让生活更有序，让成长更可见',
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
             // 轮播图
             CarouselSlider(
               options: CarouselOptions(
@@ -102,6 +143,28 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(height: 20),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+            colors: [Colors.blue, Colors.purple],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(context, '首页', Icons.home, 0, HomePage()),
+              _navItem(context, '任务', Icons.list, 1, TaskListPage()),
+              _navItem(context, '个人', Icons.person, 2, ProfilePage()),
+              _navItem(context, '统计', Icons.bar_chart, 3, StatisticsPage()),
+            ],
+          ),
         ),
       ),
     );

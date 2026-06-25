@@ -14,7 +14,13 @@ class TaskDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('任务详情'),
-        backgroundColor: Colors.blue,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.purple],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
