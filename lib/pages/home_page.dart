@@ -1,0 +1,138 @@
+import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:my_life_assistant/models/app_state_model.dart';
+import 'package:my_life_assistant/widgets/custom_drawer.dart';
+import 'package:my_life_assistant/pages/task_list_page.dart';
+import 'package:my_life_assistant/pages/profile_page.dart';
+import 'package:my_life_assistant/pages/settings_page.dart';
+
+
+class HomePage extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text('首页'),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+        ),
+        actions: [
+          IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+        ],
+      ),
+      drawer: CustomDrawer(scaffoldContext: context),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // 轮播图
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 200,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                viewportFraction: 0.9,
+              ),
+              items: [
+                'https://picsum.photos/seed/1/800/400',
+                'https://picsum.photos/seed/2/800/400',
+                'https://picsum.photos/seed/3/800/400',
+              ].map((url) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(url, fit: BoxFit.cover, width: double.infinity),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 16),
+            // 快捷入口（GridView）
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 4,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 1.1,
+                children: [
+                  _buildGridItem(Icons.task, '任务', Colors.orange, () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => TaskListPage()));
+                  }),
+                  _buildGridItem(Icons.person, '个人', Colors.blue, () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => ProfilePage()));
+                  }),
+                  _buildGridItem(Icons.settings, '设置', Colors.green, () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage()));
+                  }),
+                  _buildGridItem(Icons.info, '关于', Colors.purple, () {
+                    showAboutDialog(
+                      context: context,
+                      applicationName: '我的生活助理',
+                      applicationVersion: '1.0.0',
+                    );
+                  }),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            // 统计卡片（显示任务数量）
+            ScopedModelDescendant<AppStateModel>(
+              builder: (context, child, model) {
+                return Card(
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildStatItem('总任务', model.totalTasks, Colors.blue),
+                        _buildStatItem('已完成', model.completedTasks, Colors.green),
+                        _buildStatItem('未完成', model.pendingTasks, Colors.red),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGridItem(IconData icon, String label, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 36, color: color),
+            SizedBox(height: 4),
+            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String label, int count, Color color) {
+    return Column(
+      children: [
+        Text('$count', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color)),
+        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+      ],
+    );
+  }
+}
