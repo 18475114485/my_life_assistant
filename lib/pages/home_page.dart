@@ -3,9 +3,12 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
+import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:my_life_assistant/pages/task_list_page.dart';
 import 'package:my_life_assistant/pages/profile_page.dart';
+import 'package:my_life_assistant/pages/statistics_page.dart';
 import 'package:my_life_assistant/pages/settings_page.dart';
+import 'package:my_life_assistant/utils/navigation_utils.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -108,65 +111,45 @@ class HomePage extends StatelessWidget {
                   _buildGridItem(Icons.person, '个人', Colors.blue, () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => ProfilePage()));
                   }),
-                  _buildGridItem(Icons.settings, '设置', Colors.green, () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage()));
+                  _buildGridItem(Icons.bar_chart, '统计', Colors.green, () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => StatisticsPage()));
                   }),
                   _buildGridItem(Icons.info, '关于', Colors.purple, () {
-                    showAboutDialog(
+                    showDialog(
                       context: context,
-                      applicationName: '我的生活助理',
-                      applicationVersion: '1.0.0',
+                      builder: (ctx) => AlertDialog(
+                        title: Text('关于「我的生活助理」'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('版本: 1.0.0'),
+                            SizedBox(height: 8),
+                            Text('这是一个个人向生活助理App。'),
+                            Text('- 个性化定制日常活动！'),
+                            Text('- 工作、学习、放松、玩乐！'),
+                            Text('- 随时安排新任务！'),
+                            SizedBox(height: 8),
+                            Text('来定制属于自己的每日任务吧。'),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx),
+                            child: Text('关闭'),
+                          ),
+                        ],
+                      ),
                     );
                   }),
                 ],
               ),
             ),
-            SizedBox(height: 16),
-            // 统计卡片（显示任务数量）
-            ScopedModelDescendant<AppStateModel>(
-              builder: (context, child, model) {
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildStatItem('总任务', model.totalTasks, Colors.blue),
-                        _buildStatItem('已完成', model.completedTasks, Colors.green),
-                        _buildStatItem('未完成', model.pendingTasks, Colors.red),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
             SizedBox(height: 20),
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-            colors: [Colors.blue, Colors.purple],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navItem(context, '首页', Icons.home, 0, HomePage()),
-              _navItem(context, '任务', Icons.list, 1, TaskListPage()),
-              _navItem(context, '个人', Icons.person, 2, ProfilePage()),
-              _navItem(context, '统计', Icons.bar_chart, 3, StatisticsPage()),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: buildBottomNavBar(context),
     );
   }
 

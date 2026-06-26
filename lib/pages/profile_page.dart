@@ -2,10 +2,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_life_assistant/pages/home_page.dart';
+import 'package:my_life_assistant/pages/statistics_page.dart';
+import 'package:my_life_assistant/pages/task_list_page.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
 import 'package:my_life_assistant/widgets/custom_button.dart';
+import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:flutter_cors_image/flutter_cors_image.dart';
+import 'package:my_life_assistant/utils/navigation_utils.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -86,117 +91,100 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       drawer: CustomDrawer(scaffoldContext: context),
-      body: ScopedModelDescendant<AppStateModel>(
-        builder: (context, child, model) {
-          return Stack(
-            children: [
-              // 背景图
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      'https://www.helloimg.com/i/2026/05/09/69fee0f890e96.jpg',
+      body: Stack(
+        children: [
+          ScopedModelDescendant<AppStateModel>(
+            builder: (context, child, model) {
+              return Stack(
+                children: [
+                // 背景图
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          'https://www.helloimg.com/i/2026/05/09/69fee0f890e96.jpg',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    fit: BoxFit.cover,
                   ),
-                ),
-              ),
-              // 上层内容
-              Container(
-                color: Colors.black.withOpacity(0.4),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // 头像
-                      GestureDetector(
-                        onTap: _showImagePickerDialog,
-                        child: Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 60,
-                              backgroundImage: _avatarImage != null
-                                  ? FileImage(_avatarImage!)
-                                  : NetworkImage('https://q1.qlogo.cn/g?b=qq&nk=3031648024&s=100') as ImageProvider,
+                  // 上层内容
+                  Container(
+                    color: Colors.black.withOpacity(0.4),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                        // 头像
+                          GestureDetector(
+                            onTap: _showImagePickerDialog,
+                            child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage: _avatarImage != null
+                                        ? FileImage(_avatarImage!)
+                                        : NetworkImage('https://q1.qlogo.cn/g?b=qq&nk=3031648024&s=100') as ImageProvider,
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Colors.blue,
+                                    child: Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.blue,
-                                child: Icon(Icons.camera_alt, color: Colors.white, size: 20),
-                              ),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            model.nickname.isNotEmpty ? model.nickname : '未设置昵称',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            model.email.isNotEmpty ? model.email : '未设置邮箱',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                          SizedBox(height: 32),
+                          // 标签云（使用任务标题）
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: model.tasks.map((task) {
+                                return Chip(
+                                  label: Text(
+                                    task.title,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.blue.withOpacity(0.6),
+                                  shape: StadiumBorder(),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        model.nickname.isNotEmpty ? model.nickname : '未设置昵称',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        model.email.isNotEmpty ? model.email : '未设置邮箱',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[300],
-                        ),
-                      ),
-                      SizedBox(height: 32),
-                      // 标签云（使用任务标题）
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: model.tasks.map((task) {
-                            return Chip(
-                              label: Text(
-                                task.title,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              backgroundColor: Colors.blue.withOpacity(0.6),
-                              shape: StadiumBorder(),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-            colors: [Colors.blue, Colors.purple],
+                ],
+              );
+            },
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navItem(context, '首页', Icons.home, 0, HomePage()),
-              _navItem(context, '任务', Icons.list, 1, TaskListPage()),
-              _navItem(context, '个人', Icons.person, 2, ProfilePage()),
-              _navItem(context, '统计', Icons.bar_chart, 3, StatisticsPage()),
-            ],
-          ),
-        ),
+        ],
       ),
+      bottomNavigationBar: buildBottomNavBar(context),
     );
   }
 

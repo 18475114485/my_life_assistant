@@ -5,6 +5,8 @@ import 'package:my_life_assistant/pages/home_page.dart';
 import 'package:my_life_assistant/pages/task_list_page.dart';
 import 'package:my_life_assistant/pages/settings_page.dart';
 import 'package:my_life_assistant/pages/profile_page.dart';
+import 'package:my_life_assistant/pages/statistics_page.dart';
+import 'package:my_life_assistant/utils/navigation_utils.dart';
 
 class CustomDrawer extends StatelessWidget {
   final BuildContext scaffoldContext;
@@ -57,22 +59,30 @@ class CustomDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.home),
                 title: Text('首页'),
-                onTap: () => _navigateTo(context, HomePage()),
+                onTap: () {
+                  NavigationUtils.navigateTo(context, HomePage(), '首页');
+                },
               ),
               ListTile(
                 leading: Icon(Icons.list),
                 title: Text('任务列表'),
-                onTap: () => _navigateTo(context, TaskListPage()),
+                  onTap: () {
+                    NavigationUtils.navigateTo(context, TaskListPage(), '任务列表');
+                  },
               ),
               ListTile(
                 leading: Icon(Icons.person),
                 title: Text('个人中心'),
-                onTap: () => _navigateTo(context, ProfilePage()),
+                onTap: () {
+                  NavigationUtils.navigateTo(context, ProfilePage(), '个人中心');
+                },
               ),
               ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('设置'),
-                onTap: () => _navigateTo(context, SettingsPage()),
+                onTap: () {
+                  NavigationUtils.navigateTo(context, StatisticsPage(), '设置');
+                },
               ),
               Divider(),
               ListTile(

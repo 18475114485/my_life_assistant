@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:my_life_assistant/pages/task_detail_page.dart';
+import 'package:my_life_assistant/pages/home_page.dart';
+import 'package:my_life_assistant/pages/profile_page.dart';
+import 'package:my_life_assistant/pages/statistics_page.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/models/task_model.dart';
-import 'package:my_life_assistant/pages/task_detail_page.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
 import 'package:my_life_assistant/widgets/custom_button.dart';
+import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:my_life_assistant/utils/navigation_utils.dart';
 
 
 class TaskListPage extends StatefulWidget {
@@ -133,207 +138,191 @@ class _TaskListPageState extends State<TaskListPage> {
         ],
       ),
       drawer: CustomDrawer(scaffoldContext: context),
-      body: ScopedModelDescendant<AppStateModel>(
-        builder: (context, child, model) {
-          // 每次数据变化时更新显示列表
-          List<Task> displayTasks = model.tasks;
-          // 搜索
-          if (_searchKeyword.isNotEmpty) {
-            displayTasks = displayTasks.where((task) =>
-                task.title.toLowerCase().contains(_searchKeyword.toLowerCase())
-            ).toList();
-          }
-          // 筛选
-          if (_filterCompleted != null) {
-            displayTasks = displayTasks.where((task) =>
-            task.isCompleted == _filterCompleted
-            ).toList();
-          }
-          // 排序
-          displayTasks = model.sortTasks(_sortBy);
-          return Column(
-            children: [
-              // 搜索、筛选、排序工具栏
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: '搜索任务...',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
+      body: Stack(
+        children: [
+          ScopedModelDescendant<AppStateModel>(
+            builder: (context, child, model) {
+              print('重建：搜索：$_searchKeyword');
+              // 每次数据变化时更新显示列表
+              List<Task> displayTasks = model.tasks;
+              // 搜索
+              if (_searchKeyword.isNotEmpty) {
+                displayTasks = displayTasks.where((task) =>
+                    task.title.toLowerCase().contains(_searchKeyword.toLowerCase())
+                ).toList();
+              }
+              // 筛选
+              if (_filterCompleted != null) {
+                displayTasks = displayTasks.where((task) =>
+                task.isCompleted == _filterCompleted
+                ).toList();
+              }
+              // 排序
+              displayTasks = model.sortTasks(_sortBy);
+              return Column(
+                children: [
+                  // 搜索、筛选、排序工具栏
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: '搜索任务...',
+                              prefixIcon: Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                            ),
+                            onChanged: (value) {
+                              _searchKeyword = value;
+                            },
                           ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12),
                         ),
-                        onChanged: (value) {
-                          _searchKeyword = value;
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.filter_list),
-                      onPressed: () {
-                        // 显示筛选选项
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (ctx) {
-                            return StatefulBuilder(
-                              builder: (ctx, setStateSheet) {
-                                return Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text('筛选状态', style: TextStyle(fontSize: 18)),
-                                      RadioListTile<bool?>(
-                                        title: Text('全部'),
-                                        value: null,
-                                        groupValue: _filterCompleted,
-                                        onChanged: (val) {
-                                          setStateSheet(() {
-                                            _filterCompleted = val;
-                                          });
-                                          Navigator.pop(ctx);
-                                        },
+                        IconButton(
+                          icon: Icon(Icons.filter_list),
+                          onPressed: () {
+                            // 显示筛选选项
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (ctx) {
+                                return StatefulBuilder(
+                                  builder: (ctx, setStateSheet) {
+                                    return Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text('筛选状态', style: TextStyle(fontSize: 18)),
+                                          RadioListTile<bool?>(
+                                            title: Text('全部'),
+                                            value: null,
+                                            groupValue: _filterCompleted,
+                                            onChanged: (val) {
+                                              setStateSheet(() {
+                                                _filterCompleted = val;
+                                              });
+                                              Navigator.pop(ctx);
+                                            },
+                                          ),
+                                          RadioListTile<bool?>(
+                                            title: Text('已完成'),
+                                            value: true,
+                                            groupValue: _filterCompleted,
+                                            onChanged: (val) {
+                                              setStateSheet(() {
+                                                _filterCompleted = val;
+                                              });
+                                              Navigator.pop(ctx);
+                                            },
+                                          ),
+                                          RadioListTile<bool?>(
+                                            title: Text('未完成'),
+                                            value: false,
+                                            groupValue: _filterCompleted,
+                                            onChanged: (val) {
+                                              setStateSheet(() {
+                                                _filterCompleted = val;
+                                              });
+                                              Navigator.pop(ctx);
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                      RadioListTile<bool?>(
-                                        title: Text('已完成'),
-                                        value: true,
-                                        groupValue: _filterCompleted,
-                                        onChanged: (val) {
-                                          setStateSheet(() {
-                                            _filterCompleted = val;
-                                          });
-                                          Navigator.pop(ctx);
-                                        },
-                                      ),
-                                      RadioListTile<bool?>(
-                                        title: Text('未完成'),
-                                        value: false,
-                                        groupValue: _filterCompleted,
-                                        onChanged: (val) {
-                                          setStateSheet(() {
-                                            _filterCompleted = val;
-                                          });
-                                          Navigator.pop(ctx);
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                    );
+                                  },
                                 );
                               },
                             );
                           },
-                        );
-                      },
-                    ),
-                    PopupMenuButton<String>(
-                      icon: Icon(Icons.sort),
-                      onSelected: (value) {
-                        _sortBy = value;
-                      },
-                      itemBuilder: (ctx) => [
-                        PopupMenuItem(value: 'createdAt', child: Text('按创建时间')),
-                        PopupMenuItem(value: 'dueDate', child: Text('按截止日期')),
-                        PopupMenuItem(value: 'priority', child: Text('按优先级')),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // 任务列表
-              Expanded(
-                child: displayTasks.isEmpty
-                    ? Center(child: Text('暂无任务'))
-                    : ListView.builder(
-                  itemCount: displayTasks.length,
-                  itemBuilder: (ctx, index) {
-                    final task = displayTasks[index];
-                    return Dismissible(
-                      key: Key(task.id),
-                      background: Container(color: Colors.red, alignment: Alignment.centerRight, child: Icon(Icons.delete, color: Colors.white)),
-                      onDismissed: (direction) {
-                        model.deleteTask(task.id);
-                        ScaffoldMessenger.of(ctx).showSnackBar(
-                          SnackBar(content: Text('已删除: ${task.title}')),
-                        );
-                      },
-                      child: ListTile(
-                        leading: Checkbox(
-                          value: task.isCompleted,
-                          onChanged: (_) {
-                            model.toggleCompleted(task.id);
+                        ),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.sort),
+                          onSelected: (value) {
+                            _sortBy = value;
                           },
-                        ),
-                        title: Text(
-                          task.title,
-                          style: TextStyle(
-                            decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-                          ),
-                        ),
-                        subtitle: Text(
-                          '${task.description} · ${_timeAgo(task.createdAt)}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        // 优先级（红色为高，橙色为中，灰色为低）
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              task.priority == 'high' ? Icons.flag : (task.priority == 'medium' ? Icons.flag_outlined : Icons.flag),
-                              color: task.priority == 'high' ? Colors.red : (task.priority == 'medium' ? Colors.orange : Colors.grey),
-                            ),
-                            SizedBox(width: 8),
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () => _showEditTaskDialog(ctx, task, model),
-                            ),
+                          itemBuilder: (ctx) => [
+                            PopupMenuItem(value: 'createdAt', child: Text('按创建时间')),
+                            PopupMenuItem(value: 'dueDate', child: Text('按截止日期')),
+                            PopupMenuItem(value: 'priority', child: Text('按优先级')),
                           ],
                         ),
-                        onTap: () {
-                          // Hero 动画跳转到详情
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => TaskDetailPage(task: task),
+                      ],
+                    ),
+                  ),
+                  // 任务列表
+                  Expanded(
+                    child: displayTasks.isEmpty
+                        ? Center(child: Text('暂无任务'))
+                        : ListView.builder(
+                      itemCount: displayTasks.length,
+                      itemBuilder: (ctx, index) {
+                        final task = displayTasks[index];
+                        return Dismissible(
+                          key: Key(task.id),
+                          background: Container(color: Colors.red, alignment: Alignment.centerRight, child: Icon(Icons.delete, color: Colors.white)),
+                          onDismissed: (direction) {
+                            model.deleteTask(task.id);
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                              SnackBar(content: Text('已删除: ${task.title}')),
+                            );
+                          },
+                          child: ListTile(
+                            leading: Checkbox(
+                              value: task.isCompleted,
+                              onChanged: (_) {
+                                model.toggleCompleted(task.id);
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-            colors: [Colors.blue, Colors.purple],
+                            title: Text(
+                              task.title,
+                              style: TextStyle(
+                                decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${task.description} · ${_timeAgo(task.createdAt)}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            // 优先级（红色为高，橙色为中，灰色为低）
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  task.priority == 'high' ? Icons.flag : (task.priority == 'medium' ? Icons.flag_outlined : Icons.flag),
+                                  color: task.priority == 'high' ? Colors.red : (task.priority == 'medium' ? Colors.orange : Colors.grey),
+                                ),
+                                SizedBox(width: 8),
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () => _showEditTaskDialog(ctx, task, model),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              // Hero 动画跳转到详情
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => TaskDetailPage(task: task),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navItem(context, '首页', Icons.home, 0, HomePage()),
-              _navItem(context, '任务', Icons.list, 1, TaskListPage()),
-              _navItem(context, '个人', Icons.person, 2, ProfilePage()),
-              _navItem(context, '统计', Icons.bar_chart, 3, StatisticsPage()),
-            ],
-          ),
-        ),
+        ],
       ),
+      bottomNavigationBar: buildBottomNavBar(context),
     );
   }
 
