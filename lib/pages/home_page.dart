@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
 import 'package:my_life_assistant/widgets/nav_bar.dart';
+import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:my_life_assistant/pages/task_list_page.dart';
 import 'package:my_life_assistant/pages/profile_page.dart';
 import 'package:my_life_assistant/pages/statistics_page.dart';
@@ -149,6 +150,8 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: const BackToHomeButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: buildBottomNavBar(context),
     );
   }

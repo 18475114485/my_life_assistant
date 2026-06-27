@@ -7,16 +7,17 @@ import 'package:my_life_assistant/pages/statistics_page.dart';
 
 Widget buildBottomNavBar(BuildContext context) {
   return BottomAppBar(
+    height: 70,
     color: Colors.blue,
     child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _navItem(context, '首页', Icons.home, HomePage()),
           _navItem(context, '任务', Icons.list, TaskListPage()),
-          _navItem(context, '个人', Icons.person, ProfilePage()),
           _navItem(context, '统计', Icons.bar_chart, StatisticsPage()),
+          _navItem(context, '个人', Icons.person, ProfilePage()),
         ],
       ),
     ),
@@ -25,12 +26,12 @@ Widget buildBottomNavBar(BuildContext context) {
 
 Widget _navItem(BuildContext context, String label, IconData icon, Widget page) {
   return GestureDetector(
+    behavior: HitTestBehavior.opaque,
     onTap: () => NavigationUtils.navigateTo(context, page, label),
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: Colors.white),
-        SizedBox(height: 4),
+        Icon(icon, color: Colors.white, size: 24.0),
         Text(label, style: TextStyle(color: Colors.white, fontSize: 12)),
       ],
     ),

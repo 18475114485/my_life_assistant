@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_cors_image/flutter_cors_image.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/pages/home_page.dart';
 import 'package:my_life_assistant/pages/task_list_page.dart';
@@ -40,9 +41,18 @@ class CustomDrawer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage('https://q1.qlogo.cn/g?b=qq&nk=3031648024&s=100'),
+                    ClipOval(
+                      child: CustomNetworkImage(
+                        url: 'https://q1.qlogo.cn/g?b=qq&nk=3031648024&s=100',
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        // 👇 加载失败时显示占位图标（可选）
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: Colors.grey[300],
+                          child: Icon(Icons.person, size: 30, color: Colors.grey[600]),
+                        ),
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -60,6 +70,7 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(Icons.home),
                 title: Text('首页'),
                 onTap: () {
+                  Navigator.pop(scaffoldContext);
                   NavigationUtils.navigateTo(context, HomePage(), '首页');
                 },
               ),
@@ -67,6 +78,7 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(Icons.list),
                 title: Text('任务列表'),
                   onTap: () {
+                    Navigator.pop(scaffoldContext);
                     NavigationUtils.navigateTo(context, TaskListPage(), '任务列表');
                   },
               ),
@@ -74,14 +86,24 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(Icons.person),
                 title: Text('个人中心'),
                 onTap: () {
+                  Navigator.pop(scaffoldContext);
                   NavigationUtils.navigateTo(context, ProfilePage(), '个人中心');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.bar_chart),
+                title: Text('任务统计'),
+                onTap: () {
+                  Navigator.pop(scaffoldContext);
+                  NavigationUtils.navigateTo(context, StatisticsPage(), '任务统计');
                 },
               ),
               ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('设置'),
                 onTap: () {
-                  NavigationUtils.navigateTo(context, StatisticsPage(), '设置');
+                  Navigator.pop(scaffoldContext);
+                  NavigationUtils.navigateTo(context, SettingsPage(), '设置');
                 },
               ),
               Divider(),

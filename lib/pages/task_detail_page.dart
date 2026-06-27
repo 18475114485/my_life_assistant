@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_life_assistant/models/task_model.dart';
 import 'package:my_life_assistant/widgets/custom_button.dart';
+import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:intl/intl.dart';
-
 
 class TaskDetailPage extends StatelessWidget {
   final Task task;
@@ -11,56 +11,215 @@ class TaskDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = Theme.of(context).cardColor;
+    final statusColor = task.isCompleted ? Colors.green : Colors.orange;
+    final statusBg = statusColor.withOpacity(0.15);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('任务详情'),
+        title: const Text('任务详情'),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue, Colors.purple],
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            color: cardBg,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ---------- 左侧：正方形图片 ----------
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      'https://picsum.photos/seed/${task.id.hashCode}/200/200',
+                      width: 140,
+                      height: 140,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 140,
+                        height: 140,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.image, size: 50, color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // ---------- 右侧：内容 ----------
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ---- 第一行：任务名 + 状态 ----
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 任务名（Hero 动画）
+                            Expanded(
+                              child: Hero(
+                                tag: 'task_${task.id}',
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: Text(
+                                    task.title,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    softWrap: true,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            // 状态标签
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: statusBg,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                task.isCompleted ? '已完成' : '未完成',
+                                style: TextStyle(
+                                  color: statusColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // ---- 第二行：描述 + 优先级 ----
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 描述（左对齐，自动换行）
+                            Expanded(
+                              child: Text(
+                                task.description.isNotEmpty
+                                    ? task.description
+                                    : '暂无描述',
+                                style: const TextStyle(fontSize: 14),
+                                softWrap: true,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            // 优先级（右下角，带旗帜图标）
+                            Row(
+                              children: [
+                                Icon(
+                                  _getPriorityIcon(task.priority),
+                                  color: _getPriorityColor(task.priority),
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _getPriorityLabel(task.priority),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: _getPriorityColor(task.priority),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 24, thickness: 1),
+
+                        // ---- 第三行：创建时间 + 截止日期 ----
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '创建: ${DateFormat('yyyy-MM-dd HH:mm').format(task.createdAt)}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              ),
+                            ),
+                            if (task.dueDate != null)
+                              Text(
+                                '截止: ${DateFormat('yyyy-MM-dd').format(task.dueDate!)}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                ),
+                              )
+                            else
+                              Text(
+                                '无截止日期',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Hero 动画共享标题
-                Hero(
-                  tag: 'task_${task.id}',
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Text(
-                      task.title,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text('描述: ${task.description}'),
-                SizedBox(height: 8),
-                Text('状态: ${task.isCompleted ? "已完成" : "未完成"}'),
-                SizedBox(height: 8),
-                Text('优先级: ${task.priority}'),
-                SizedBox(height: 8),
-                Text('创建时间: ${DateFormat('yyyy-MM-dd HH:mm').format(task.createdAt)}'),
-                if (task.dueDate != null) Text('截止日期: ${DateFormat('yyyy-MM-dd').format(task.dueDate!)}'),
-                Spacer(),
-                CustomButton(
-                  label: '返回',
-                  icon: Icons.arrow_back,
-                  onPressed: () => Navigator.pop(context),
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      floatingActionButton: const BackToHomeButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  IconData _getPriorityIcon(String priority) {
+    switch (priority) {
+      case 'high':
+        return Icons.flag;
+      case 'medium':
+        return Icons.flag_outlined;
+      default:
+        return Icons.flag;
+    }
+  }
+
+  Color _getPriorityColor(String priority) {
+    switch (priority) {
+      case 'high':
+        return Colors.red;
+      case 'medium':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getPriorityLabel(String priority) {
+    switch (priority) {
+      case 'high':
+        return '高';
+      case 'medium':
+        return '中';
+      default:
+        return '低';
+    }
   }
 }

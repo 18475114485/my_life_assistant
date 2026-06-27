@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
+import 'package:my_life_assistant/widgets/home_button.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -112,6 +113,8 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
+      floatingActionButton: const BackToHomeButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

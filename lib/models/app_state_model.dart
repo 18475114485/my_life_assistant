@@ -156,12 +156,39 @@ class AppStateModel extends Model {
   void _addSampleTasks() {
     final now = DateTime.now();
     _tasks = [
-      Task(id: '1', title: '学习 Flutter', description: '完成基础组件练习', createdAt: now.subtract(Duration(days: 2)), dueDate: now.add(Duration(days: 2)), priority: 'high'),
-      Task(id: '2', title: '买日用品', description: '牙膏、洗发水', createdAt: now.subtract(Duration(hours: 3)), dueDate: now.add(Duration(days: 1)), priority: 'medium'),
-      Task(id: '3', title: '阅读《百年孤独》', description: '至少读50页', createdAt: now.subtract(Duration(hours: 13)), dueDate: now.add(Duration(days: 7)), priority: 'low'),
-      Task(id: '4', title: '锻炼身体', description: '跑步30分钟', createdAt: now.subtract(Duration(hours: 2)), dueDate: now.add(Duration(days: 1)), priority: 'high'),
+      Task(
+        id: '1',
+        title: '学习 Flutter',
+        description: '完成基础组件练习',
+        createdAt: now.subtract(Duration(days: 2)),
+        dueDate: now.add(Duration(days: 2)),
+        priority: 'high',
+      ),
+      Task(
+        id: '2',
+        title: '买日用品',
+        description: '牙膏、洗发水',
+        createdAt: now.subtract(Duration(hours: 5)),
+        dueDate: now.add(Duration(days: 1)),
+        priority: 'medium',
+      ),
+      Task(
+        id: '3',
+        title: '阅读《百年孤独》',
+        description: '至少读50页',
+        createdAt: now.subtract(Duration(days: 7)),
+        dueDate: now.add(Duration(days: 7)),
+        priority: 'low',
+      ),
+      Task(
+        id: '4',
+        title: '锻炼身体',
+        description: '跑步30分钟',
+        createdAt: now.subtract(Duration(hours: 2)),
+        dueDate: now,
+        priority: 'high',
+      ),
     ];
-    _saveTasks();
   }
 
   void _saveTasks() {
