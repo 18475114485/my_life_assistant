@@ -12,6 +12,8 @@ import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:intl/intl.dart';
 import 'package:my_life_assistant/utils/navigation_utils.dart';
+import 'package:my_life_assistant/constants/my_icons.dart';
+
 
 class TaskListPage extends StatefulWidget {
   @override
@@ -243,12 +245,12 @@ class _TaskListPageState extends State {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(MyIcons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(MyIcons.add),
             onPressed: () => _showAddTaskDialog(context, ScopedModel.of(context)),
           ),
         ],
@@ -316,7 +318,7 @@ class _TaskListPageState extends State {
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: '搜索任务...',
-                                prefixIcon: Icon(Icons.search),
+                                prefixIcon: Icon(MyIcons.search),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -332,7 +334,7 @@ class _TaskListPageState extends State {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.filter_list),
+                            icon: Icon(MyIcons.filter),
                             onPressed: () {
                               showModalBottomSheet(
                                 context: context,
@@ -394,7 +396,7 @@ class _TaskListPageState extends State {
                             },
                           ),
                           PopupMenuButton(
-                            icon: Icon(Icons.sort),
+                            icon: Icon(MyIcons.sort),
                             onSelected: (value) {
                               setState(() {
                                 _sortBy = value;
@@ -435,7 +437,7 @@ class _TaskListPageState extends State {
                               alignment: Alignment.centerRight,
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 20.0),
-                                child: Icon(Icons.delete, color: Colors.white),
+                                child: Icon(MyIcons.delete, color: Colors.white),
                               ),
                             ),
                             confirmDismiss: (direction) async { // 👈 添加确认
@@ -486,15 +488,15 @@ class _TaskListPageState extends State {
                                 children: [
                                   Icon(
                                     task.priority == 'high'
-                                        ? Icons.flag
-                                        : (task.priority == 'medium' ? Icons.flag_outlined : Icons.flag),
+                                        ? MyIcons.flag
+                                        : (task.priority == 'medium' ? MyIcons.flag : MyIcons.flag),
                                     color: task.priority == 'high'
                                         ? Colors.red
                                         : (task.priority == 'medium' ? Colors.orange : Colors.grey),
                                   ),
                                   SizedBox(width: 8),
                                   IconButton(
-                                    icon: Icon(Icons.edit),
+                                    icon: Icon(MyIcons.edit),
                                     onPressed: () => _showEditTaskDialog(ctx, task, model),
                                   ),
                                 ],

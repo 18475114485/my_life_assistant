@@ -12,6 +12,8 @@ import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:flutter_cors_image/flutter_cors_image.dart';
 import 'package:my_life_assistant/utils/navigation_utils.dart';
+import 'package:my_life_assistant/constants/my_icons.dart';
+
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -51,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.photo_library),
+                leading: Icon(MyIcons.photo),
                 title: Text('从相册选择'),
                 onTap: () {
                   Navigator.pop(ctx);
@@ -59,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_camera),
+                leading: Icon(MyIcons.camera),
                 title: Text('拍照'),
                 onTap: () {
                   Navigator.pop(ctx);
@@ -87,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(MyIcons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
       ),
@@ -150,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           stackTrace) =>
                                           Container(
                                             color: Colors.grey[300],
-                                            child: Icon(Icons.person, size: 50,
+                                            child: Icon(MyIcons.person, size: 50,
                                                 color: Colors.grey[600]),
                                           ),
                                     ),
@@ -162,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       radius: 20,
                                       backgroundColor: Colors.blue,
                                       child: Icon(
-                                          Icons.camera_alt, color: Colors.white,
+                                          MyIcons.camera, color: Colors.white,
                                           size: 20),
                                     ),
                                   ),

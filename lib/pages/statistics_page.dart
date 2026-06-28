@@ -8,6 +8,7 @@ import 'package:my_life_assistant/utils/navigation_utils.dart';
 import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
+import 'package:my_life_assistant/constants/my_icons.dart';
 
 
 class StatisticsPage extends StatelessWidget {
@@ -82,9 +83,9 @@ class StatisticsPage extends StatelessWidget {
                             mainAxisSpacing: 12,
                             childAspectRatio: 1.0,
                             children: [
-                                _statCard(context, Icons.list_alt, total, '任务数', Colors.blue),
-                                _statCard(context, Icons.check_circle, completed, '已完成', Colors.green),
-                                _statCard(context, Icons.pending, inProgress, '未完成', Colors.orange),
+                                _statCard(context, MyIcons.task, total, '任务数', Colors.blue),
+                                _statCard(context, MyIcons.checkCircle, completed, '已完成', Colors.green),
+                                _statCard(context, MyIcons.radioButtonUnchecked, inProgress, '未完成', Colors.orange),
                             ],
                           ),
                         ),
@@ -100,7 +101,7 @@ class StatisticsPage extends StatelessWidget {
                             final task = model.tasks[index];
                             return ListTile(
                               leading: Icon(
-                                task.isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+                                task.isCompleted ? MyIcons.checkCircle : MyIcons.radioButtonUnchecked,
                                 color: task.isCompleted ? Colors.green : Colors.grey,
                               ),
                               title: Text(task.title),

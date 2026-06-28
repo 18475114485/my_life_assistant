@@ -10,6 +10,7 @@ import 'package:my_life_assistant/pages/profile_page.dart';
 import 'package:my_life_assistant/pages/statistics_page.dart';
 import 'package:my_life_assistant/pages/settings_page.dart';
 import 'package:my_life_assistant/utils/navigation_utils.dart';
+import 'package:my_life_assistant/constants/my_icons.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(MyIcons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         actions: [
@@ -106,16 +107,16 @@ class HomePage extends StatelessWidget {
                 mainAxisSpacing: 8,
                 childAspectRatio: 1.1,
                 children: [
-                  _buildGridItem(Icons.task, '任务', Colors.orange, () {
+                  _buildGridItem(MyIcons.task, '任务', Colors.orange, () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => TaskListPage()));
                   }),
-                  _buildGridItem(Icons.person, '个人', Colors.blue, () {
+                  _buildGridItem(MyIcons.person, '个人', Colors.blue, () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => ProfilePage()));
                   }),
                   _buildGridItem(Icons.bar_chart, '统计', Colors.green, () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => StatisticsPage()));
                   }),
-                  _buildGridItem(Icons.info, '关于', Colors.purple, () {
+                  _buildGridItem(MyIcons.info, '关于', Colors.purple, () {
                     showDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(

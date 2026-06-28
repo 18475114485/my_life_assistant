@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_life_assistant/pages/home_page.dart';
 import 'package:my_life_assistant/utils/navigation_utils.dart';
+import 'package:my_life_assistant/constants/my_icons.dart';
 
 class BackToHomeButton extends StatelessWidget {
   const BackToHomeButton({Key? key}) : super(key: key);
@@ -8,11 +9,10 @@ class BackToHomeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      mini: true,
       onPressed: () {
         NavigationUtils.navigateTo(context, HomePage(), '首页');
       },
-      child: const Icon(Icons.home, color: Colors.white),
+      child: const Icon(MyIcons.home, color: Colors.white, size: 30),
       backgroundColor: Colors.blue,
       foregroundColor: Colors.white,
       elevation: 4,

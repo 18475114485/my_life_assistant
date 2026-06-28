@@ -8,6 +8,7 @@ import 'package:my_life_assistant/pages/settings_page.dart';
 import 'package:my_life_assistant/pages/profile_page.dart';
 import 'package:my_life_assistant/pages/statistics_page.dart';
 import 'package:my_life_assistant/utils/navigation_utils.dart';
+import 'package:my_life_assistant/constants/my_icons.dart';
 
 class CustomDrawer extends StatelessWidget {
   final BuildContext scaffoldContext;
@@ -50,7 +51,7 @@ class CustomDrawer extends StatelessWidget {
                         // 👇 加载失败时显示占位图标（可选）
                         errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[300],
-                          child: Icon(Icons.person, size: 30, color: Colors.grey[600]),
+                          child: Icon(MyIcons.person, size: 30, color: Colors.grey[600]),
                         ),
                       ),
                     ),
@@ -67,7 +68,7 @@ class CustomDrawer extends StatelessWidget {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.home),
+                leading: Icon(MyIcons.home),
                 title: Text('首页'),
                 onTap: () {
                   Navigator.pop(scaffoldContext);
@@ -75,7 +76,7 @@ class CustomDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.list),
+                leading: Icon(MyIcons.task),
                 title: Text('任务列表'),
                   onTap: () {
                     Navigator.pop(scaffoldContext);
@@ -83,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
                   },
               ),
               ListTile(
-                leading: Icon(Icons.person),
+                leading: Icon(MyIcons.person),
                 title: Text('个人中心'),
                 onTap: () {
                   Navigator.pop(scaffoldContext);
@@ -103,12 +104,12 @@ class CustomDrawer extends StatelessWidget {
                 title: Text('设置'),
                 onTap: () {
                   Navigator.pop(scaffoldContext);
-                  NavigationUtils.navigateTo(context, SettingsPage(), '设置');
+                  NavigationUtils.navigateTo(context, SettingsPage(), '设置', true);
                 },
               ),
               Divider(),
               ListTile(
-                leading: Icon(Icons.info),
+                leading: Icon(MyIcons.info),
                 title: Text('关于'),
                 onTap: () {
                   Navigator.pop(scaffoldContext);

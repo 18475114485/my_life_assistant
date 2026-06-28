@@ -3,6 +3,8 @@ import 'package:my_life_assistant/models/task_model.dart';
 import 'package:my_life_assistant/widgets/custom_button.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:intl/intl.dart';
+import 'package:my_life_assistant/constants/my_icons.dart';
+
 
 class TaskDetailPage extends StatelessWidget {
   final Task task;
@@ -40,7 +42,7 @@ class TaskDetailPage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ---------- 左侧：正方形图片 ----------
+                  // ---------- 左侧：网络图片 ----------
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
@@ -193,11 +195,11 @@ class TaskDetailPage extends StatelessWidget {
   IconData _getPriorityIcon(String priority) {
     switch (priority) {
       case 'high':
-        return Icons.flag;
+        return MyIcons.flag;
       case 'medium':
-        return Icons.flag_outlined;
+        return MyIcons.flag;
       default:
-        return Icons.flag;
+        return MyIcons.flag;
     }
   }
 
