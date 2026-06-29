@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_life_assistant/models/task_model.dart';
-import 'package:my_life_assistant/widgets/custom_button.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:intl/intl.dart';
 import 'package:my_life_assistant/constants/my_icons.dart';
@@ -42,7 +41,7 @@ class TaskDetailPage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ---------- 左侧：网络图片 ----------
+                  // 网络图片
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
@@ -59,13 +58,11 @@ class TaskDetailPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-
-                  // ---------- 右侧：内容 ----------
+                  // 内容
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ---- 第一行：任务名 + 状态 ----
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,11 +108,10 @@ class TaskDetailPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
-                        // ---- 第二行：描述 + 优先级 ----
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // 描述（左对齐，自动换行）
+                            // 描述
                             Expanded(
                               child: Text(
                                 task.description.isNotEmpty
@@ -126,7 +122,7 @@ class TaskDetailPage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            // 优先级（右下角，带旗帜图标）
+                            // 优先级
                             Row(
                               children: [
                                 Icon(
@@ -149,10 +145,10 @@ class TaskDetailPage extends StatelessWidget {
                         ),
                         const Divider(height: 24, thickness: 1),
 
-                        // ---- 第三行：创建时间 + 截止日期 ----
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // 创建时间
                             Text(
                               '创建: ${DateFormat('yyyy-MM-dd HH:mm').format(task.createdAt)}',
                               style: TextStyle(
@@ -160,6 +156,7 @@ class TaskDetailPage extends StatelessWidget {
                                 color: isDark ? Colors.grey[400] : Colors.grey[600],
                               ),
                             ),
+                            // 截止时间
                             if (task.dueDate != null)
                               Text(
                                 '截止: ${DateFormat('yyyy-MM-dd').format(task.dueDate!)}',
@@ -187,11 +184,13 @@ class TaskDetailPage extends StatelessWidget {
           ),
         ),
       ),
+      // 首页按钮
       floatingActionButton: const BackToHomeButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
+  // 优先级图标
   IconData _getPriorityIcon(String priority) {
     switch (priority) {
       case 'high':
@@ -203,6 +202,7 @@ class TaskDetailPage extends StatelessWidget {
     }
   }
 
+  // 优先级颜色
   Color _getPriorityColor(String priority) {
     switch (priority) {
       case 'high':
@@ -214,6 +214,7 @@ class TaskDetailPage extends StatelessWidget {
     }
   }
 
+  // 优先级显示
   String _getPriorityLabel(String priority) {
     switch (priority) {
       case 'high':

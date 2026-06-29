@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:my_life_assistant/models/task_model.dart';
 import 'package:my_life_assistant/services/storage_service.dart';
-import 'dart:math' show Random;
 
 class AppStateModel extends Model {
   List<Task> _tasks = [];
@@ -14,7 +13,7 @@ class AppStateModel extends Model {
     _loadData();
   }
 
-  // ---- Getter ----
+  // ---- Getter(不会直接被修改内部数据) ----
   List<Task> get tasks => List.unmodifiable(_tasks);
   ThemeMode get themeMode => _themeMode;
   double get fontScale => _fontScale;
@@ -76,7 +75,8 @@ class AppStateModel extends Model {
     }
   }
 
-  // ---- 查询操作（搜索、筛选、排序） ----
+  // ---- 查询操作 ----
+  // 搜索
   List<Task> searchTasks(String keyword) {
     if (keyword.isEmpty) return _tasks;
     return _tasks.where((task) =>
@@ -85,11 +85,13 @@ class AppStateModel extends Model {
     ).toList();
   }
 
+  // 筛选
   List<Task> filterTasks({bool? showCompleted}) {
     if (showCompleted == null) return _tasks;
     return _tasks.where((task) => task.isCompleted == showCompleted).toList();
   }
 
+  // 排序
   List<Task> sortTasks(String by) {
     final sorted = List<Task>.from(_tasks);
     switch (by) {
@@ -187,6 +189,22 @@ class AppStateModel extends Model {
         createdAt: now.subtract(Duration(hours: 2)),
         dueDate: now,
         priority: 'high',
+      ),
+      Task(
+        id: '5',
+        title: '学习 Web',
+        description: '完成数据库基本原理学习',
+        createdAt: now.subtract(Duration(days: 2)),
+        dueDate: now.add(Duration(days: 2)),
+        priority: 'high',
+      ),
+      Task(
+        id: '6',
+        title: '大扫除',
+        description: '打扫房间、客厅、厨房',
+        createdAt: now.subtract(Duration(days: 5)),
+        dueDate: now.add(Duration(days: 10)),
+        priority: 'medium',
       ),
     ];
   }

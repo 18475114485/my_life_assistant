@@ -4,6 +4,7 @@ import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:my_life_assistant/constants/my_icons.dart';
 
+
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -13,7 +14,6 @@ class _SettingsPageState extends State<SettingsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  bool _notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +76,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   onSubmitted: (value) {
                     model.updateUserInfo(nickname: value);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('昵称已更新: $value')),
+                      SnackBar(content: Text('昵称已更新: $value')), // 回车确认
                     );
                   },
                 ),
               ),
-              // 演示表单验证
+              // 邮箱输入
               ListTile(
                 leading: Icon(MyIcons.email),
                 title: Text('邮箱'),
@@ -94,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   onSubmitted: (value) {
                     model.updateUserInfo(email: value);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('邮箱已更新: $value')),
+                      SnackBar(content: Text('邮箱已更新: $value')), // 回车确认
                     );
                   },
                 ),
@@ -110,6 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         },
       ),
+      // 首页按钮
       floatingActionButton: const BackToHomeButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

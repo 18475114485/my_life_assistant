@@ -7,7 +7,6 @@ import 'package:my_life_assistant/pages/statistics_page.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/models/task_model.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
-import 'package:my_life_assistant/widgets/custom_button.dart';
 import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:intl/intl.dart';
@@ -37,6 +36,7 @@ class _TaskListPageState extends State {
     return '刚刚';
   }
 
+  // 新增任务的对话框
   void _showAddTaskDialog(BuildContext context, AppStateModel model) {
     final titleController = TextEditingController();
     final descController = TextEditingController();
@@ -134,6 +134,7 @@ class _TaskListPageState extends State {
     );
   }
 
+  // 编辑任务的对话框
   void _showEditTaskDialog(BuildContext context, Task task, AppStateModel model) {
     final titleController = TextEditingController(text: task.title);
     final descController = TextEditingController(text: task.description);
@@ -187,7 +188,6 @@ class _TaskListPageState extends State {
             TextButton(onPressed: () => Navigator.pop(ctx), child: Text('取消')),
             ElevatedButton(
               onPressed: () {
-                // 先关闭当前编辑对话框
                 Navigator.pop(ctx);
                 // 弹出确认对话框
                 showDialog(
@@ -255,12 +255,13 @@ class _TaskListPageState extends State {
           ),
         ],
       ),
+      // 调用抽屉部件
       drawer: CustomDrawer(scaffoldContext: context),
       body: Stack(
         children: [
           ScopedModelDescendant<AppStateModel>(
             builder: (context, child, model) {
-              // ================= 核心计算：搜索 + 筛选 + 排序 =================
+              // 搜索 + 筛选 + 排序
               List displayTasks = List.from(model.tasks); // 复制一份，避免修改原始数据
 
               // 1. 搜索（标题或描述包含关键词）
@@ -281,24 +282,21 @@ class _TaskListPageState extends State {
 
               // 3. 排序
               switch (_sortBy) {
-                case 'dueDate':
+                case 'dueDate':       // 截止时间
                   displayTasks.sort((a, b) {
                     if (a.dueDate == null) return 1;
                     if (b.dueDate == null) return -1;
                     return a.dueDate!.compareTo(b.dueDate!);
                   });
                   break;
-                case 'priority':
+                case 'priority':      // 优先级
                   final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
                   displayTasks.sort((a, b) =>
                       priorityOrder[a.priority]!.compareTo(priorityOrder[b.priority]!));
                   break;
-                default: // 'createdAt'
+                default:              // 创建时间
                   displayTasks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
               }
-
-              // 调试：打印当前显示的任务数量（运行后看终端）
-              print('搜索词: "$_searchKeyword", 筛选: $_filterCompleted, 排序: $_sortBy, 显示任务数: ${displayTasks.length}');
 
               return SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -308,11 +306,11 @@ class _TaskListPageState extends State {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Wrap(
-                        alignment: WrapAlignment.start, // 居中排列
+                        alignment: WrapAlignment.start,
                         spacing: 8, // 水平间距
-                        runSpacing: 8, // 垂直间距（换行后）
+                        runSpacing: 8, // 垂直间距
                         children: [
-                          // 搜索框（占满一行）
+                          // 搜索框
                           SizedBox(
                             width: double.infinity, // 占满父容器宽度
                             child: TextField(
@@ -328,11 +326,10 @@ class _TaskListPageState extends State {
                                 setState(() {
                                   _searchKeyword = value;
                                 });
-                                // 调试
-                                print('搜索关键词更新: "$value"');
                               },
                             ),
                           ),
+                          // 筛选按钮
                           IconButton(
                             icon: Icon(MyIcons.filter),
                             onPressed: () {
@@ -395,6 +392,7 @@ class _TaskListPageState extends State {
                               );
                             },
                           ),
+                          // 排序按钮
                           PopupMenuButton(
                             icon: Icon(MyIcons.sort),
                             onSelected: (value) {
@@ -413,7 +411,9 @@ class _TaskListPageState extends State {
                       ),
                     ),
                     // ================= 任务列表 =================
+                    // 判断有无任务
                     displayTasks.isEmpty
+                      // 无则提示
                       ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -424,6 +424,7 @@ class _TaskListPageState extends State {
                           ],
                         ),
                       )
+                      // 有则完整列出
                       : ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -440,7 +441,8 @@ class _TaskListPageState extends State {
                                 child: Icon(MyIcons.delete, color: Colors.white),
                               ),
                             ),
-                            confirmDismiss: (direction) async { // 👈 添加确认
+                            // 删除任务
+                            confirmDismiss: (direction) async {
                               return await showDialog(
                                 context: context,
                                 builder: (ctx) => AlertDialog(
@@ -465,19 +467,41 @@ class _TaskListPageState extends State {
                                 SnackBar(content: Text('已删除: ${task.title}')),
                               );
                             },
+                            // 任务内容
                             child: ListTile(
-                              leading: Checkbox(
-                                value: task.isCompleted,
-                                onChanged: (_) {
-                                  model.toggleCompleted(task.id);
-                                },
+                              leading: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Checkbox(
+                                    value: task.isCompleted,
+                                    onChanged: (_) {
+                                      model.toggleCompleted(task.id);
+                                    },
+                                  ),
+                                  ClipOval(
+                                    child: Image.network(
+                                      'https://picsum.photos/seed/${task.id}/40/40',
+                                      width: 40,
+                                      height: 40,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Container(
+                                        width: 40,
+                                        height: 40,
+                                        color: Colors.grey[300],
+                                        child: Icon(Icons.image, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
+                              // 标题
                               title: Text(
                                 task.title,
                                 style: TextStyle(
                                   decoration: task.isCompleted ? TextDecoration.lineThrough : null,
                                 ),
                               ),
+                              // 描述
                               subtitle: Text(
                                 '${task.description} · ${_timeAgo(task.createdAt)}',
                                 maxLines: 1,
@@ -486,6 +510,7 @@ class _TaskListPageState extends State {
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
+                                  // 优先级
                                   Icon(
                                     task.priority == 'high'
                                         ? MyIcons.flag
@@ -495,12 +520,14 @@ class _TaskListPageState extends State {
                                         : (task.priority == 'medium' ? Colors.orange : Colors.grey),
                                   ),
                                   SizedBox(width: 8),
+                                  // 编辑任务
                                   IconButton(
                                     icon: Icon(MyIcons.edit),
                                     onPressed: () => _showEditTaskDialog(ctx, task, model),
                                   ),
                                 ],
                               ),
+                              // 导航到对应详情页
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -520,8 +547,10 @@ class _TaskListPageState extends State {
           ),
         ],
       ),
+      // 全局按钮：返回首页
       floatingActionButton: const BackToHomeButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // 底部导航栏部件
       bottomNavigationBar: buildBottomNavBar(context),
     );
   }

@@ -7,7 +7,6 @@ import 'package:my_life_assistant/pages/statistics_page.dart';
 import 'package:my_life_assistant/pages/task_list_page.dart';
 import 'package:my_life_assistant/models/app_state_model.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
-import 'package:my_life_assistant/widgets/custom_button.dart';
 import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:flutter_cors_image/flutter_cors_image.dart';
@@ -24,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   File? _avatarImage;
   final ImagePicker _picker = ImagePicker();
-
+  // 调用image_picker插件，实现从相册选择图片或拍照
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -33,7 +32,6 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
-
   Future<void> _pickCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
@@ -42,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
-
+  // 底部菜单，选择拍照或相册
   void _showImagePickerDialog() {
     showModalBottomSheet(
       context: context,
@@ -93,6 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
       ),
+      // 抽屉
       drawer: CustomDrawer(scaffoldContext: context),
       body: Stack(
         children: [
@@ -100,8 +99,8 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
-                  'https://www.helloimg.com/i/2026/05/09/69fee0f890e96.jpg',
+                image: AssetImage(
+                  'assets/images/bg_img.gif',
                 ),
                 fit: BoxFit.cover,
               ),
@@ -110,6 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
           LayoutBuilder(
             builder: (context, constraints) {
               // 计算可用高度（屏幕高度 - AppBar - 底部导航栏）
+              // 主要为解决溢出问题
               final screenHeight = MediaQuery
                   .of(context)
                   .size
@@ -157,6 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                     ),
                                   ),
+                                  // 切换头像，相册或拍照
                                   Positioned(
                                     bottom: 0,
                                     right: 0,
@@ -172,6 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             SizedBox(height: 16),
+                            // 昵称：设置页中输入内容
                             Text(
                               model.nickname.isNotEmpty
                                   ? model.nickname
@@ -183,6 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             SizedBox(height: 8),
+                            // 邮箱
                             Text(
                               model.email.isNotEmpty ? model.email : '未设置邮箱',
                               style: TextStyle(
@@ -191,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             SizedBox(height: 32),
-                            // 标签云（使用任务标题）
+                            // 标签云
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20),
@@ -221,18 +224,11 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+      // 首页按钮
       floatingActionButton: const BackToHomeButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // 底部导航栏
       bottomNavigationBar: buildBottomNavBar(context),
-    );
-  }
-
-  Widget _statItem(String label, int count) {
-    return Column(
-      children: [
-        Text('$count', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-      ],
     );
   }
 }

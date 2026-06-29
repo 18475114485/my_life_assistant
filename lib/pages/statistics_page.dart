@@ -9,8 +9,10 @@ import 'package:my_life_assistant/widgets/nav_bar.dart';
 import 'package:my_life_assistant/widgets/custom_drawer.dart';
 import 'package:my_life_assistant/widgets/home_button.dart';
 import 'package:my_life_assistant/constants/my_icons.dart';
+import 'package:my_life_assistant/constants/app_colors.dart';
 
 
+// 统计页
 class StatisticsPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -28,6 +30,7 @@ class StatisticsPage extends StatelessWidget {
           ),
         ),
       ),
+      // 抽屉
       drawer: CustomDrawer(scaffoldContext: context),
       body: Stack(
         children: [
@@ -36,6 +39,7 @@ class StatisticsPage extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: ScopedModelDescendant<AppStateModel>(
                 builder: (context, child, model) {
+                  // 主要为解决溢出问题
                   final total = model.tasks.length;
                   final completed = model.tasks.where((t) => t.isCompleted).length;
                   final inProgress = model.tasks.where((t) => !t.isCompleted).length;
@@ -90,7 +94,7 @@ class StatisticsPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 16),
-                        // 任务列表
+                        // 任务明细列表
                         Text('任务明细', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         SizedBox(height: 8),
                         ListView.builder(
@@ -132,12 +136,15 @@ class StatisticsPage extends StatelessWidget {
           ),
         ],
       ),
+      // 首页按钮
       floatingActionButton: const BackToHomeButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // 底部导航栏
       bottomNavigationBar: buildBottomNavBar(context),
     );
   }
 
+  // 状态卡片：三种状态复用
   Widget _statCard(BuildContext context, IconData icon, int count, String label, Color color) {
     return Container(
       decoration: BoxDecoration(

@@ -10,21 +10,12 @@ import 'package:my_life_assistant/pages/statistics_page.dart';
 import 'package:my_life_assistant/utils/navigation_utils.dart';
 import 'package:my_life_assistant/constants/my_icons.dart';
 
+
+// 抽屉部件
 class CustomDrawer extends StatelessWidget {
   final BuildContext scaffoldContext;
 
   const CustomDrawer({required this.scaffoldContext});
-
-  void _navigateTo(BuildContext context, Widget page, {bool isCurrent = false}) {
-    Navigator.pop(scaffoldContext); // 关闭抽屉
-    if (!isCurrent) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => page));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('您已在当前页面')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +25,7 @@ class CustomDrawer extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+              // 抽屉头
               DrawerHeader(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
@@ -48,7 +40,7 @@ class CustomDrawer extends StatelessWidget {
                         width: 60,
                         height: 60,
                         fit: BoxFit.cover,
-                        // 👇 加载失败时显示占位图标（可选）
+                        // 加载失败时显示占位图标
                         errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey[300],
                           child: Icon(MyIcons.person, size: 30, color: Colors.grey[600]),
@@ -56,10 +48,12 @@ class CustomDrawer extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
+                    // 从设置页输入内容获取
                     Text(
                       model.nickname.isNotEmpty ? model.nickname : '未设置昵称',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
+                    // 从设置页输入内容获取
                     Text(
                       model.email.isNotEmpty ? model.email : '未设置邮箱',
                       style: TextStyle(color: Colors.white70, fontSize: 12),
@@ -108,6 +102,7 @@ class CustomDrawer extends StatelessWidget {
                 },
               ),
               Divider(),
+              // 关于对话框
               ListTile(
                 leading: Icon(MyIcons.info),
                 title: Text('关于'),
@@ -117,19 +112,21 @@ class CustomDrawer extends StatelessWidget {
                     context: scaffoldContext,
                     builder: (ctx) => AlertDialog(
                       title: Text('关于「我的生活助理」'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('版本: 1.0.0'),
-                          SizedBox(height: 8),
-                          Text('这是一个个人向生活助理App。'),
-                          Text('- 个性化定制日常活动！'),
-                          Text('- 工作、学习、放松、玩乐！'),
-                          Text('- 随时安排新任务！'),
-                          SizedBox(height: 8),
-                          Text('来定制属于自己的每日任务吧。'),
-                        ],
+                      content: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('版本: 1.0.0'),
+                            const SizedBox(height: 8),
+                            Text('这是一个个人向生活助理App。'),
+                            Text('- 个性化定制日常活动！'),
+                            Text('- 工作、学习、放松、玩乐！'),
+                            Text('- 随时安排新任务！'),
+                            const SizedBox(height: 8),
+                            Text('来定制属于自己的每日任务吧。'),
+                          ],
+                        ),
                       ),
                       actions: [
                         TextButton(

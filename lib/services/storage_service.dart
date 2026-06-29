@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
+
+// 本地存储
 class StorageService {
   static const String _tasksKey = 'tasks';
   static const String _themeKey = 'themeMode';

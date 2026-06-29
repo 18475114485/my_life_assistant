@@ -1,12 +1,14 @@
+// 定义任务的各个属性
 class Task {
   final String id;          // 唯一标识
   String title;
   String description;
   bool isCompleted;
   DateTime createdAt;
-  DateTime? dueDate;        // 截止日期（可选）
+  DateTime? dueDate;        // 截止日期
   String priority;          // 'high', 'medium', 'low'
 
+  // 构造函数
   Task({
     required this.id,
     required this.title,

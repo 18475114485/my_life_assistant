@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// 页面导航工具，实现跳转与判断（SnackBar）
 class NavigationUtils {
   /// 导航到目标页面，如果已在当前页面则显示提示
   static void navigateTo(

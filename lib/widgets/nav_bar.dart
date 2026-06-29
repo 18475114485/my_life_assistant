@@ -11,8 +11,7 @@ Widget buildBottomNavBar(BuildContext context) {
   // 获取视口高度
   final viewportHeight = MediaQuery.of(context).size.height;
 
-  // 当视口高度小于导航栏最小所需高度时，直接隐藏
-  // 这里设 550 作为安全阈值（导航栏完整显示约需 60~70px，但提前隐藏更安全）
+  // 当视口高度小于导航栏最小所需高度时，直接隐藏(解决溢出问题)
   if (viewportHeight < 70) {
     return const SizedBox.shrink();
   }
@@ -41,6 +40,7 @@ Widget buildBottomNavBar(BuildContext context) {
   );
 }
 
+// 构建单个导航项目复用
 Widget _navItem(BuildContext context, String label, IconData icon, Widget page) {
   return GestureDetector(
     behavior: HitTestBehavior.opaque,
