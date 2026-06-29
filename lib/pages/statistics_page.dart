@@ -51,6 +51,7 @@ class StatisticsPage extends StatelessWidget {
                       children: [
                         // 完成率卡片
                         Card(
+                          color: AppColors.primaryLight.withOpacity(0.6),
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
@@ -148,7 +149,7 @@ class StatisticsPage extends StatelessWidget {
   Widget _statCard(BuildContext context, IconData icon, int count, String label, Color color) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: AppColors.primaryLight.withOpacity(0.4),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
