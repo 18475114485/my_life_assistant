@@ -145,8 +145,8 @@ class TaskDetailPage extends StatelessWidget {
                         ),
                         const Divider(height: 24, thickness: 1),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // 创建时间
                             Text(
